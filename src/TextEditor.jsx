@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "quill/dist/quill.snow.css";
 import Quill from "quill";
-import "./TextEditor.css";
+import Cite from "citation-js";
 import StickyBottomBar from "./StickyBottomBar";
+import "./TextEditor.css";
 
 const toolbarOptions = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -55,16 +56,44 @@ const TextEditor = () => {
     return () => quill.off("text-change", handler);
   }, [quill]);
 
-  const handleAddCitation = (citation) => {
-    // Implement adding a citation to text editor here
-    console.log("Citation added:", citation);
+  const generateCite = (bibtex, format) => {
+    const cite = new Cite(bibtex);
+    const data = cite.format(format, {
+      format: "text",
+      template: "harvard",
+      lang: "en-US",
+    });
+    console.log("citation", data);
+    return data;
+  };
+
+  const handleAddCitation = (bibtex, url) => {
+    console.log(url);
+    const citation = generateCite(bibtex, "citation");
+    const reference = generateCite(bibtex, "bibliography");
+
+    const range = quill.getSelection();
+    if (range !== null) {
+      if (range.length === 0) {
+        quill.insertText(quill.getLength() + 1, citation, "link", url, "user");
+      } else {
+        quill.insertText(
+          range.index + range.length + 1,
+          citation,
+          "link",
+          url,
+          "user"
+        );
+      }
+    }
+    quill.insertText(quill.getLength() + 1, `${reference}`, "user");
   };
 
   return (
     <div className="rcontainer flex justify-center align-center ">
       <StickyBottomBar
         heading={initialHeading}
-        onAddCitation={handleAddCitation}
+        onAddCitation={(bibtex, url) => handleAddCitation(bibtex, url)}
       />
       <div className="container" ref={wrapperRef}></div>
     </div>

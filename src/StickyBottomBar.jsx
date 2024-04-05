@@ -148,7 +148,13 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
                         <Box overflow={"auto"} maxHeight={"300px"}>
                           {suggestions &&
                             suggestions.map((suggestion, _) => (
-                              <SuggestionCard key={_} suggestion={suggestion} />
+                              <SuggestionCard
+                                key={_}
+                                suggestion={suggestion}
+                                onAddCitation={(bibtex, url) =>
+                                  onAddCitation(bibtex, url)
+                                }
+                              />
                             ))}
                         </Box>
                       </Box>
@@ -181,8 +187,9 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
 
 export default StickyBottomBar;
 
-const SuggestionCard = ({ suggestion }) => {
+const SuggestionCard = ({ suggestion, onAddCitation }) => {
   const {
+    url,
     title,
     authors,
     abstract,
@@ -246,6 +253,7 @@ const SuggestionCard = ({ suggestion }) => {
           variant="text"
           color="primary"
           startIcon={<AddIcon />}
+          onClick={() => onAddCitation(bibtex, url)}
           sx={{
             fontSize: "12px",
             textTransform: "none",
@@ -261,6 +269,7 @@ const SuggestionCard = ({ suggestion }) => {
           variant="text"
           color="primary"
           startIcon={<OpenInNewIcon />}
+          // onClick={handleOpenInNew}
           sx={{
             fontSize: "12px",
             textTransform: "none",
@@ -274,37 +283,5 @@ const SuggestionCard = ({ suggestion }) => {
         </Button>
       </CardActions>
     </Card>
-  );
-};
-
-const SelectCitation = () => {
-  return (
-    <>
-      <FormControl fullWidth sx={{ mt: 2 }}>
-        <InputLabel id="citation-style-label">Citation Style</InputLabel>
-        <Select
-          labelId="citation-style-label"
-          id="citation-style"
-          value={citationStyle}
-          label="Citation Style"
-          onChange={handleCitationStyleChange}
-        >
-          <MenuItem value="mla">MLA</MenuItem>
-          <MenuItem value="apa">APA</MenuItem>
-          <MenuItem value="chicago">Chicago</MenuItem>
-          <MenuItem value="harvard">Harvard</MenuItem>
-          <MenuItem value="ieee">IEEE</MenuItem>
-        </Select>
-      </FormControl>
-      <Button
-        variant="contained"
-        color="primary"
-        size="small"
-        onClick={() => handleAddCitation(anchorEl)}
-        sx={{ mt: 2 }}
-      >
-        Add
-      </Button>
-    </>
   );
 };
