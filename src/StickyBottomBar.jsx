@@ -79,7 +79,7 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
       // console.log("dsearch", debouncedSearch, "result", resSuggestions);
     }
     // resSuggestions.splice(10);
-  }, [data, heading, debouncedSearch]);
+  }, [heading, debouncedSearch]);
 
   // useEffect(() => {
   //   console.log("suggestions", suggestions);
