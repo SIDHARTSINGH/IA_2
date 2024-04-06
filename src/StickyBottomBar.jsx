@@ -11,6 +11,10 @@ import {
   Card,
   CardContent,
   CardActions,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import PopupState, { bindToggle, bindPopper } from "material-ui-popup-state";
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
@@ -29,7 +33,7 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
   const [search, setSearch] = useState(heading);
   const debouncedSearch = useDebounce(search);
   const [suggestions, setSuggestions] = useState([]);
-  const [citationStyle, setCitationStyle] = useState("mla");
+  const [citationStyle, setCitationStyle] = useState("");
 
   useEffect(() => {
     const val = searchRef.current?.value;
@@ -47,7 +51,9 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
             limit: 10,
           })
           .then((res) => {
-            console.log("App -> useEffect ", res.data);
+            // console.log("App -> useEffect ", res.data);
+
+            // api error is returned in response object
             if (!res.data.hasOwnProperty("error"))
               setSuggestions(res.data.data);
           })
@@ -75,9 +81,13 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
     // resSuggestions.splice(10);
   }, [data, heading, debouncedSearch]);
 
-  useEffect(() => {
-    console.log("suggestions", suggestions);
-  }, [suggestions]);
+  // useEffect(() => {
+  //   console.log("suggestions", suggestions);
+  // }, [suggestions]);
+
+  const handleCitationStyleChange = (e) => {
+    setCitationStyle(e.target.value);
+  };
 
   return (
     <Box
@@ -122,17 +132,41 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
                 {({ TransitionProps }) => (
                   <Fade {...TransitionProps} timeout={350}>
                     <Paper>
-                      <Box sx={{ p: 1, width: "400px", height: "350px" }}>
-                        <Box sx={{ display: "flex" }}>
-                          <SearchIcon sx={{ color: "action.active" }} />
-                          <TextField
-                            ref={searchRef}
-                            variant="standard"
-                            placeholder="search citations..."
-                            defaultValue={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            fullWidth
-                          />
+                      <Box
+                        sx={{
+                          p: 1,
+                          width: "400px",
+                          height: "350px",
+                        }}
+                      >
+                        <Box display="flex" gap={1}>
+                          <Box display="flex" width={"100%"}>
+                            <SearchIcon sx={{ color: "action.active" }} />
+                            <TextField
+                              ref={searchRef}
+                              variant="standard"
+                              placeholder="search citations..."
+                              defaultValue={search}
+                              onChange={(e) => setSearch(e.target.value)}
+                              fullWidth
+                            />
+                          </Box>
+                          <Box sx={{ pt: "3px", pr: 1, m: 0 }}>
+                            <FormControl size="small" sx={{ minWidth: "85px" }}>
+                              <Select
+                                variant="standard"
+                                label="Citation Style"
+                                value={citationStyle}
+                                onChange={handleCitationStyleChange}
+                              >
+                                <MenuItem value="mla">MLA</MenuItem>
+                                <MenuItem value="apa">APA</MenuItem>
+                                <MenuItem value="chicago">Chicago</MenuItem>
+                                <MenuItem value="harvard">Harvard</MenuItem>
+                                <MenuItem value="ieee">IEEE</MenuItem>
+                              </Select>
+                            </FormControl>
+                          </Box>
                         </Box>
                         <Divider sx={{ mt: 1, width: "100%" }} />
                         <Box overflow={"auto"} maxHeight={"300px"}>
@@ -142,7 +176,7 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
                                 key={_}
                                 suggestion={suggestion}
                                 onAddCitation={(bibtex, url) =>
-                                  onAddCitation(bibtex, url)
+                                  onAddCitation(bibtex, url, citationStyle)
                                 }
                               />
                             ))}

@@ -4,6 +4,7 @@ import Quill from "quill";
 import Cite from "citation-js";
 import StickyBottomBar from "./StickyBottomBar";
 import "./TextEditor.css";
+import { createStyles } from "@mui/material";
 
 const toolbarOptions = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -56,27 +57,26 @@ const TextEditor = () => {
   //   return () => quill.off("text-change", handler);
   // }, [quill]);
 
-  const generateCite = (bibtex, format) => {
+  const generateCite = (bibtex, format, citationStyle) => {
     const cite = new Cite(bibtex);
     const data = cite.format(format, {
       format: "text",
-      template: "harvard",
+      template: citationStyle,
       lang: "en-US",
     });
     // console.log("citation", data);
     return data;
   };
 
-  const handleAddCitation = (bibtex, url) => {
-    const citation = generateCite(bibtex, "citation");
-    const reference = generateCite(bibtex, "bibliography");
+  const handleAddCitation = (bibtex, url, citationStyle) => {
+    const citation = generateCite(bibtex, "citation", citationStyle);
+    const reference = generateCite(bibtex, "bibliography", citationStyle);
 
     // Focus the editor, but don't scroll
     quill.focus({ preventScroll: true });
 
     const range = quill.getSelection();
     if (range !== null) {
-      console.log("range.length", range.length);
       quill.insertText(range.index + range.length + 1, `${citation} `, "user");
       quill.formatText(
         range.index + range.length + 1,
@@ -97,7 +97,9 @@ const TextEditor = () => {
     <div className="rcontainer flex justify-center align-center ">
       <StickyBottomBar
         heading={initialHeading}
-        onAddCitation={(bibtex, url) => handleAddCitation(bibtex, url)}
+        onAddCitation={(bibtex, url, citationStyle) =>
+          handleAddCitation(bibtex, url, citationStyle)
+        }
       />
       <div className="container" ref={wrapperRef}></div>
     </div>
