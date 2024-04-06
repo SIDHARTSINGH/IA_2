@@ -61,7 +61,7 @@ const TextEditor = () => {
     const cite = new Cite(bibtex);
     const data = cite.format(format, {
       format: "text",
-      template: citationStyle,
+      template: citationStyle === "" ? "apa" : citationStyle,
       lang: "en-US",
     });
     // console.log("citation", data);

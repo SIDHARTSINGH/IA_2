@@ -51,7 +51,7 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
             limit: 10,
           })
           .then((res) => {
-            // console.log("App -> useEffect ", res.data);
+            console.log("App -> useEffect ", res.data);
 
             // api error is returned in response object
             if (!res.data.hasOwnProperty("error"))
@@ -63,19 +63,19 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
     };
 
     if (debouncedSearch === "") {
-      const resSuggestions = data.filter((article) =>
-        article.title.includes(heading)
-      ); //debouncedSearch
-      setSuggestions(resSuggestions);
+      // const resSuggestions = data.filter((article) =>
+      //   article.title.includes(heading)
+      // ); //debouncedSearch
+      // setSuggestions(resSuggestions);
 
-      // getSuggestions(heading);
+      getSuggestions(heading);
     } else {
-      const resSuggestions = data.filter((article) =>
-        article.title.includes("climate")
-      ); //debouncedSearch
-      setSuggestions(resSuggestions);
+      // const resSuggestions = data.filter((article) =>
+      //   article.title.includes("climate")
+      // ); //debouncedSearch
+      // setSuggestions(resSuggestions);
 
-      // getSuggestions(debouncedSearch);
+      getSuggestions(debouncedSearch);
       // console.log("dsearch", debouncedSearch, "result", resSuggestions);
     }
     // resSuggestions.splice(10);
