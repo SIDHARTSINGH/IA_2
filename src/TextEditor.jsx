@@ -68,7 +68,6 @@ const TextEditor = () => {
   };
 
   const handleAddCitation = (bibtex, url) => {
-    console.log(url);
     const citation = generateCite(bibtex, "citation");
     const reference = generateCite(bibtex, "bibliography");
 
@@ -78,7 +77,7 @@ const TextEditor = () => {
     const range = quill.getSelection();
     if (range !== null) {
       console.log("range.length", range.length);
-      quill.insertText(range.index + range.length + 1, citation, "user");
+      quill.insertText(range.index + range.length + 1, `${citation} `, "user");
       quill.formatText(
         range.index + range.length + 1,
         citation.length,
@@ -89,7 +88,9 @@ const TextEditor = () => {
       quill.insertText(quill.getLength() + 1, citation, "user");
       quill.formatText(l, citation.length, "link", url);
     }
-    quill.insertText(quill.getLength() + 1, `${reference}`, "user");
+    quill.insertText(quill.getLength() + 1, `${reference}\n`, "user");
+
+    quill.setSelection(range.index + citation.length + reference.length + 2);
   };
 
   return (

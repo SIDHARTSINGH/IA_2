@@ -7,15 +7,10 @@ import {
   Fade,
   Paper,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   TextField,
   Card,
   CardContent,
   CardActions,
-  Link,
 } from "@mui/material";
 import PopupState, { bindToggle, bindPopper } from "material-ui-popup-state";
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
@@ -52,9 +47,9 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
             limit: 10,
           })
           .then((res) => {
-            // console.log("App -> useEffect ", res.data);
-            const resSuggestions = res.data;
-            setSuggestions(res.data);
+            console.log("App -> useEffect ", res.data);
+            if (!res.data.hasOwnProperty("error"))
+              setSuggestions(res.data.data);
           })
           .catch((err) => {
             console.error(err);
@@ -66,28 +61,23 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
         article.title.includes(heading)
       ); //debouncedSearch
       setSuggestions(resSuggestions);
+
       // getSuggestions(heading);
     } else {
       const resSuggestions = data.filter((article) =>
         article.title.includes("climate")
       ); //debouncedSearch
       setSuggestions(resSuggestions);
-      // console.log("dsearch", debouncedSearch, "result", resSuggestions);
 
       // getSuggestions(debouncedSearch);
+      // console.log("dsearch", debouncedSearch, "result", resSuggestions);
     }
     // resSuggestions.splice(10);
   }, [data, heading, debouncedSearch]);
 
   useEffect(() => {
-    // console.log("suggestions", suggestions);
+    console.log("suggestions", suggestions);
   }, [suggestions]);
-
-  const handleAddCitation = (citation) => {
-    console.log("handleAddCitation", citation);
-  };
-
-  const handleCitationStyleChange = () => {};
 
   return (
     <Box
