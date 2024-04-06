@@ -46,15 +46,15 @@ const TextEditor = () => {
     }
   }, [quill]);
 
-  useEffect(() => {
-    if (quill == null) return;
-    const handler = (delta, oldDelta, source) => {
-      console.log("delta", delta);
-    };
-    quill.on("text-change", handler);
+  // useEffect(() => {
+  //   if (quill == null) return;
+  //   const handler = (delta, oldDelta, source) => {
+  //     console.log("delta", delta);
+  //   };
+  //   quill.on("text-change", handler);
 
-    return () => quill.off("text-change", handler);
-  }, [quill]);
+  //   return () => quill.off("text-change", handler);
+  // }, [quill]);
 
   const generateCite = (bibtex, format) => {
     const cite = new Cite(bibtex);
@@ -63,7 +63,7 @@ const TextEditor = () => {
       template: "harvard",
       lang: "en-US",
     });
-    console.log("citation", data);
+    // console.log("citation", data);
     return data;
   };
 
@@ -72,19 +72,22 @@ const TextEditor = () => {
     const citation = generateCite(bibtex, "citation");
     const reference = generateCite(bibtex, "bibliography");
 
+    // Focus the editor, but don't scroll
+    quill.focus({ preventScroll: true });
+
     const range = quill.getSelection();
     if (range !== null) {
-      if (range.length === 0) {
-        quill.insertText(quill.getLength() + 1, citation, "link", url, "user");
-      } else {
-        quill.insertText(
-          range.index + range.length + 1,
-          citation,
-          "link",
-          url,
-          "user"
-        );
-      }
+      console.log("range.length", range.length);
+      quill.insertText(range.index + range.length + 1, citation, "user");
+      quill.formatText(
+        range.index + range.length + 1,
+        citation.length,
+        "link",
+        url
+      );
+    } else {
+      quill.insertText(quill.getLength() + 1, citation, "user");
+      quill.formatText(l, citation.length, "link", url);
     }
     quill.insertText(quill.getLength() + 1, `${reference}`, "user");
   };

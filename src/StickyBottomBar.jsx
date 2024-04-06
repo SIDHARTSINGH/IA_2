@@ -52,7 +52,7 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
             limit: 10,
           })
           .then((res) => {
-            console.log("App -> useEffect ", res.data);
+            // console.log("App -> useEffect ", res.data);
             const resSuggestions = res.data;
             setSuggestions(res.data);
           })
@@ -72,7 +72,7 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
         article.title.includes("climate")
       ); //debouncedSearch
       setSuggestions(resSuggestions);
-      console.log("dsearch", debouncedSearch, "result", resSuggestions);
+      // console.log("dsearch", debouncedSearch, "result", resSuggestions);
 
       // getSuggestions(debouncedSearch);
     }
@@ -80,7 +80,7 @@ const StickyBottomBar = ({ heading, onAddCitation }) => {
   }, [data, heading, debouncedSearch]);
 
   useEffect(() => {
-    console.log("suggestions", suggestions);
+    // console.log("suggestions", suggestions);
   }, [suggestions]);
 
   const handleAddCitation = (citation) => {
